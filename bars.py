@@ -48,6 +48,7 @@ def print_bar_information(title, bar):
 if __name__ == '__main__':
     if len(sys.argv) == 1:
         sys.exit('Запуск скрипта: python bars.py <пусть-к-json-файлу>')
+        
     bars_json = load_data(sys.argv[1])
     if not bars_json:
         sys.exit('Не удаётся загрузить файл {}'.format(sys.argv[1]))
