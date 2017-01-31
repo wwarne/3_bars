@@ -35,10 +35,9 @@ def get_distance(latitude_point1, longitude_point1, latitude_point2, longitude_p
 def get_float_from_user(message_to_user):
     try:
         # В России принято использовать запятую как разделитель, поэтому позаботимся о пользователе.
-        user_input = float(input(message_to_user).replace(',', '.'))
+        return float(input(message_to_user).replace(',', '.'))
     except ValueError:
         return
-    return user_input
 
 
 def print_bar_information(title, bar):
