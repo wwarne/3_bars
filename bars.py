@@ -7,11 +7,8 @@ def load_data(filepath):
     try:
         with open(filepath, encoding='windows-1251') as bars_file:
             return json.load(bars_file)
-    except OSError:
-        print('Не получается открыть указанный файл.')
-    except json.JSONDecodeError:
-        print('Указанный файл не содержит данных или повреждён.')
-    sys.exit(1)
+    except (OSError, json.JSONDecodeError):
+        return
 
 
 def get_biggest_bar(bars_data):
@@ -29,41 +26,17 @@ def get_closest_bar(bars_data, longitude, latitude):
 
 def get_distance(latitude_point1, longitude_point1, latitude_point2, longitude_point2):
     """
-    Вычисляет расстояние между двумя точками с известными координатами
-
-    :param latitude_point1: широта первой точки
-    :param longitude_point1: долгота первой точки
-    :param latitude_point2: широта второй точки
-    :param longitude_point2: долгота второй точки
-    :return: расстояние между точками
-
-    Для расчётов в пределах одного города буду использовать приблизительную модель - весь город находится на плоскости,
-    а широта и долгота - это координаты X и Y, и расстояние между ними считается простой формулой.
-    А так как выводить его не нужно, то и переводить в метры или километры - тоже.
+    Использую формула расстояний между двумя точками на плоскости. Для небольших расстояний (в пределах города)!
     """
     return math.sqrt((latitude_point2 - latitude_point1) ** 2 + (longitude_point2 - longitude_point1) ** 2)
 
 
-def check_script_arguments():
-    if len(sys.argv) == 1:
-        print('Вы не указали файл с данными при запуске')
-        sys.exit(1)
-
-
-def input_float(message_to_user):
-    """
-    Запрашивает у пользователя число. При неправильном вводе запрашивает ещё раз.
-
-    :param message_to_user: Сообщение-подсказка пользователю
-    :return: введённое число, преобразованное к типу float
-    """
-    while True:
-        try:
-            # В России принято использовать запятую как разделитель, поэтому позаботимся о пользователе.
-            user_input = float(input(message_to_user).replace(',', '.'))
-            break
-        except ValueError:
-            print('Ошибка при вводе. Попробуйте ещё раз.')
+def get_float_from_user(message_to_user):
+    try:
+        # В России принято использовать запятую как разделитель, поэтому позаботимся о пользователе.
+        user_input = float(input(message_to_user).replace(',', '.'))
+    except ValueError:
+        return
     return user_input
 
 
@@ -73,13 +46,20 @@ def print_bar_information(title, bar):
 
 
 if __name__ == '__main__':
-    check_script_arguments()
+    if len(sys.argv) == 1:
+        sys.exit('Запуск скрипта: python bars.py <пусть-к-json-файлу>')
     bar_json = load_data(sys.argv[1])
+    if not bar_json:
+        sys.exit('Не удаётся загрузить файл {}'.format(sys.argv[1]))
+
     print_bar_information('Самый большой бар:', get_biggest_bar(bar_json))
     print_bar_information('Самый маленький бар:', get_smallest_bar(bar_json))
+
     print('Пожалуйста, введите свои координаты:')
-    user_latitude = input_float('Широта: ')
-    user_longitude = input_float('Долгота: ')
+    user_latitude = get_float_from_user('Широта: ')
+    user_longitude = get_float_from_user('Долгота: ')
+    if not user_latitude or not user_longitude:
+        sys.exit('Ошибка при вводе координат. Перезапустите скрипт.')
     print_bar_information('Ближайший к вам бар:', get_closest_bar(bar_json,
                                                                   latitude=user_latitude,
                                                                   longitude=user_longitude))
