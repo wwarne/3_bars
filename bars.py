@@ -48,18 +48,18 @@ def print_bar_information(title, bar):
 if __name__ == '__main__':
     if len(sys.argv) == 1:
         sys.exit('Запуск скрипта: python bars.py <пусть-к-json-файлу>')
-    bar_json = load_data(sys.argv[1])
-    if not bar_json:
+    bars_json = load_data(sys.argv[1])
+    if not bars_json:
         sys.exit('Не удаётся загрузить файл {}'.format(sys.argv[1]))
 
-    print_bar_information('Самый большой бар:', get_biggest_bar(bar_json))
-    print_bar_information('Самый маленький бар:', get_smallest_bar(bar_json))
+    print_bar_information('Самый большой бар:', get_biggest_bar(bars_json))
+    print_bar_information('Самый маленький бар:', get_smallest_bar(bars_json))
 
     print('Пожалуйста, введите свои координаты:')
     user_latitude = get_float_from_user('Широта: ')
     user_longitude = get_float_from_user('Долгота: ')
-    if not user_latitude or not user_longitude:
+    if user_latitude is None or user_longitude is None:
         sys.exit('Ошибка при вводе координат. Перезапустите скрипт.')
-    print_bar_information('Ближайший к вам бар:', get_closest_bar(bar_json,
+    print_bar_information('Ближайший к вам бар:', get_closest_bar(bars_json,
                                                                   latitude=user_latitude,
                                                                   longitude=user_longitude))
