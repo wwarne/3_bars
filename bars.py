@@ -28,7 +28,8 @@ def get_distance(latitude_point1, longitude_point1, latitude_point2, longitude_p
     """
     Использую формула расстояний между двумя точками на плоскости. Для небольших расстояний (в пределах города)!
     """
-    return math.sqrt((latitude_point2 - latitude_point1) ** 2 + (longitude_point2 - longitude_point1) ** 2)
+    return math.sqrt((float(latitude_point2) - float(latitude_point1)) ** 2 +
+                     (float(longitude_point2) - float(longitude_point1)) ** 2)
 
 
 def get_float_from_user(message_to_user):
