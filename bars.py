@@ -26,7 +26,7 @@ def get_closest_bar(bars_data, longitude, latitude):
 
 def get_distance(latitude_point1, longitude_point1, latitude_point2, longitude_point2):
     """
-    Использую формула расстояний между двумя точками на плоскости. Для небольших расстояний (в пределах города)!
+    Использую формулу расстояний между двумя точками на плоскости. Для небольших расстояний (в пределах города)!
     """
     return math.sqrt((float(latitude_point2) - float(latitude_point1)) ** 2 +
                      (float(longitude_point2) - float(longitude_point1)) ** 2)
